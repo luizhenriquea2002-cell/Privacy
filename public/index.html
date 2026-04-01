@@ -1,23 +1,8 @@
-<h1>Login</h1>
+<h1>🔥 PrivacyLux</h1>
 
-<input id="user" placeholder="Usuário">
-<button onclick="entrar()">Entrar</button>
+<a href="/postar.html">➕ Postar</a>
+<a href="/login.html">Login</a>
 
-<script>
-async function entrar(){
-  const user = document.getElementById("user").value;
+<div id="lista"></div>
 
-  const res = await fetch("/login", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ user })
-  });
-
-  const data = await res.json();
-
-  localStorage.setItem("user", user);
-  localStorage.setItem("vip", data.vip);
-
-  window.location.href = "/feed.html";
-}
-</script>
+<script src="app.js"></script>
