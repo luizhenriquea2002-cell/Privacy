@@ -1,0 +1,37 @@
+<h1>💬 Chat Público</h1>
+
+<div id="chatBox" style="height:300px; overflow:auto; border:1px solid #333;"></div>
+
+<input id="msg" placeholder="Digite mensagem...">
+<button onclick="enviar()">Enviar</button>
+
+<script>
+async function enviar(){
+  const user = localStorage.getItem("user");
+  const texto = document.getElementById("msg").value;
+
+  await fetch("/chat", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ user, texto })
+  });
+
+  document.getElementById("msg").value = "";
+}
+
+async function carregar(){
+  const res = await fetch("/chat");
+  const data = await res.json();
+
+  const box = document.getElementById("chatBox");
+
+  box.innerHTML = data.map(m => `
+    <p><b>${m.user}</b>: ${m.texto} <small>${m.hora}</small></p>
+  `).join("");
+
+  box.scrollTop = box.scrollHeight;
+}
+
+// 🔥 atualiza automático
+setInterval(carregar, 1000);
+</script>
