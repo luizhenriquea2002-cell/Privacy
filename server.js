@@ -1,37 +1,19 @@
-let users = [];
-let anuncios = [];
+let mensagens = [];
 
-// LOGIN
-app.post("/login", (req, res) => {
-  const { email } = req.body;
+// ENVIAR MENSAGEM
+app.post("/chat", (req, res) => {
+  const { user, texto } = req.body;
 
-  if (!users.includes(email)) {
-    users.push(email);
-  }
-
-  res.json({ ok: true });
-});
-
-// CRIAR ANÚNCIO
-app.post("/criar-anuncio", (req, res) => {
-  const { nome, descricao, imagem, preco, whatsapp, verificado, premium } = req.body;
-
-  anuncios.push({
-    id: Date.now(),
-    nome,
-    descricao,
-    imagem,
-    preco,
-    whatsapp,
-    verificado,
-    premium
+  mensagens.push({
+    user,
+    texto,
+    hora: new Date().toLocaleTimeString()
   });
 
   res.json({ ok: true });
 });
 
-// LISTAR ORDENADO (premium primeiro)
-app.get("/anuncios", (req, res) => {
-  const ordenado = anuncios.sort((a, b) => b.premium - a.premium);
-  res.json(ordenado);
+// LISTAR MENSAGENS
+app.get("/chat", (req, res) => {
+  res.json(mensagens.slice(-50)); // últimas 50
 });
