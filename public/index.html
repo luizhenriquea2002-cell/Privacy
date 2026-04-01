@@ -4,8 +4,20 @@
 <button onclick="entrar()">Entrar</button>
 
 <script>
-function entrar(){
-  localStorage.setItem("user", document.getElementById("user").value);
+async function entrar(){
+  const user = document.getElementById("user").value;
+
+  const res = await fetch("/login", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ user })
+  });
+
+  const data = await res.json();
+
+  localStorage.setItem("user", user);
+  localStorage.setItem("vip", data.vip);
+
   window.location.href = "/feed.html";
 }
 </script>
