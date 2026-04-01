@@ -1,57 +1,37 @@
-const express = require("express");
-const cors = require("cors");
-
-const app = express();
-
-app.use(express.json());
-app.use(cors());
-app.use(express.static(__dirname));
-
 let users = [];
 let anuncios = [];
 
-// REGISTRO
-app.post("/register", (req, res) => {
-  const { email, password } = req.body;
-
-  users.push({ email, password });
-
-  res.json({ ok: true });
-});
-
 // LOGIN
 app.post("/login", (req, res) => {
-  const { email, password } = req.body;
+  const { email } = req.body;
 
-  const user = users.find(u => u.email === email && u.password === password);
-
-  if (!user) return res.status(401).json({ erro: "Login inválido" });
+  if (!users.includes(email)) {
+    users.push(email);
+  }
 
   res.json({ ok: true });
 });
 
 // CRIAR ANÚNCIO
 app.post("/criar-anuncio", (req, res) => {
-  const { nome, descricao, imagem } = req.body;
+  const { nome, descricao, imagem, preco, whatsapp, verificado, premium } = req.body;
 
   anuncios.push({
     id: Date.now(),
     nome,
     descricao,
-    imagem
+    imagem,
+    preco,
+    whatsapp,
+    verificado,
+    premium
   });
 
   res.json({ ok: true });
 });
 
-// LISTAR
+// LISTAR ORDENADO (premium primeiro)
 app.get("/anuncios", (req, res) => {
-  res.json(anuncios);
+  const ordenado = anuncios.sort((a, b) => b.premium - a.premium);
+  res.json(ordenado);
 });
-
-// ROTAS
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
-});
-
-app.listen(3000, () => console.log("Servidor rodando 🚀"));
