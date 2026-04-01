@@ -1,0 +1,22 @@
+<h2>Criar conta</h2>
+
+<input id="email" placeholder="Email"><br>
+<input id="password" placeholder="Senha"><br>
+
+<button onclick="register()">Criar</button>
+
+<script>
+async function register() {
+  await fetch("/register", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    })
+  });
+
+  alert("Conta criada!");
+  window.location.href = "/login.html";
+}
+</script>
