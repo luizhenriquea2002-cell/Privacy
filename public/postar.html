@@ -1,0 +1,24 @@
+<h2>Novo anúncio</h2>
+
+<input id="nome" placeholder="Nome"><br>
+<input id="descricao" placeholder="Descrição"><br>
+<input id="imagem" placeholder="URL da imagem"><br>
+
+<button onclick="enviar()">Publicar</button>
+
+<script>
+async function enviar() {
+  await fetch("/criar-anuncio", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      nome: nome.value,
+      descricao: descricao.value,
+      imagem: imagem.value
+    })
+  });
+
+  alert("Publicado!");
+  window.location.href = "/";
+}
+</script>
