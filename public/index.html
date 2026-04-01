@@ -1,0 +1,11 @@
+<h1>Login</h1>
+
+<input id="user" placeholder="Usuário">
+<button onclick="entrar()">Entrar</button>
+
+<script>
+function entrar(){
+  localStorage.setItem("user", document.getElementById("user").value);
+  window.location.href = "/feed.html";
+}
+</script>
