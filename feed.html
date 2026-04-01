@@ -1,1 +1,30 @@
+<h1>Feed 🔥</h1>
 
+<textarea id="texto"></textarea>
+<button onclick="postar()">Postar</button>
+
+<div id="feed"></div>
+
+<script>
+async function postar(){
+  await fetch("/post", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      user: localStorage.getItem("user"),
+      texto: document.getElementById("texto").value
+    })
+  });
+  carregar();
+}
+
+async function carregar(){
+  const res = await fetch("/posts");
+  const data = await res.json();
+
+  document.getElementById("feed").innerHTML =
+    data.map(p => `<p><b>${p.user}</b>: ${p.texto}</p>`).join("");
+}
+
+carregar();
+</script>
