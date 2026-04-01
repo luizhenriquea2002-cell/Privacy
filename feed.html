@@ -1,20 +1,41 @@
-<h1>Feed 🔥</h1>
+<h1>🔥 Feed Premium</h1>
 
-<textarea id="texto"></textarea>
+<button onclick="virarVip()">💰 Virar VIP</button>
+
+<textarea id="texto"></textarea><br>
+<label>
+  <input type="checkbox" id="premium"> Conteúdo Premium 🔒
+</label>
+<br>
 <button onclick="postar()">Postar</button>
 
 <div id="feed"></div>
 
 <script>
+async function virarVip(){
+  const user = localStorage.getItem("user");
+
+  await fetch("/vip", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ user })
+  });
+
+  localStorage.setItem("vip", true);
+  alert("Agora você é VIP 🔥");
+}
+
 async function postar(){
   await fetch("/post", {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({
       user: localStorage.getItem("user"),
-      texto: document.getElementById("texto").value
+      texto: document.getElementById("texto").value,
+      premium: document.getElementById("premium").checked
     })
   });
+
   carregar();
 }
 
@@ -22,8 +43,20 @@ async function carregar(){
   const res = await fetch("/posts");
   const data = await res.json();
 
+  const vip = localStorage.getItem("vip") === "true";
+
   document.getElementById("feed").innerHTML =
-    data.map(p => `<p><b>${p.user}</b>: ${p.texto}</p>`).join("");
+    data.map(p => {
+      if (p.premium && !vip) {
+        return `
+          <div style="filter: blur(5px);">
+            🔒 Conteúdo bloqueado
+          </div>
+        `;
+      }
+
+      return `<p><b>${p.user}</b>: ${p.texto}</p>`;
+    }).join("");
 }
 
 carregar();
