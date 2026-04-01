@@ -2,23 +2,39 @@
 
 <input id="nome" placeholder="Nome"><br>
 <input id="descricao" placeholder="Descrição"><br>
-<input id="imagem" placeholder="URL da imagem"><br>
+<input type="file" id="img"><br>
+<input id="preco" placeholder="Valor R$"><br>
+<input id="whatsapp" placeholder="WhatsApp"><br>
+
+<label><input type="checkbox" id="verificado"> Verificado ⭐</label><br>
+<label><input type="checkbox" id="premium"> Premium 💎</label><br>
 
 <button onclick="enviar()">Publicar</button>
 
 <script>
-async function enviar() {
-  await fetch("/criar-anuncio", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      nome: nome.value,
-      descricao: descricao.value,
-      imagem: imagem.value
-    })
-  });
+function enviar(){
+  const file = document.getElementById("img").files[0];
 
-  alert("Publicado!");
-  window.location.href = "/";
+  const reader = new FileReader();
+  reader.onloadend = async () => {
+    await fetch("/criar-anuncio", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        nome: nome.value,
+        descricao: descricao.value,
+        imagem: reader.result,
+        preco: preco.value,
+        whatsapp: whatsapp.value,
+        verificado: verificado.checked,
+        premium: premium.checked
+      })
+    });
+
+    alert("Publicado 🔥");
+    window.location.href = "/";
+  };
+
+  reader.readAsDataURL(file);
 }
 </script>
